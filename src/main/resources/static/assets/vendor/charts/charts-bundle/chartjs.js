@@ -99,7 +99,7 @@
                         }
                     },
 
-                    scales: {
+                    sales: {
                         xAxes: [{
                             ticks: {
                                 fontSize: 14,
