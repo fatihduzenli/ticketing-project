@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.TaskDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -17,7 +18,9 @@ public abstract class AbstractMapService <T,ID>{
       return object;
   }
 
-  List<T>findAll(){
+
+
+    List<T>findAll(){
 
       return new ArrayList<>(map.values());
   }
@@ -34,5 +37,6 @@ public abstract class AbstractMapService <T,ID>{
   void update(ID id, T object){
       map.put(id,object);
   }
+
 
 }

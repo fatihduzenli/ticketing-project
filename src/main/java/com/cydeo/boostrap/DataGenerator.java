@@ -2,11 +2,13 @@ package com.cydeo.boostrap;
 
 import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.RoleDTO;
+import com.cydeo.dto.TaskDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.enums.Gender;
 import com.cydeo.enums.Status;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.RoleService;
+import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -16,13 +18,14 @@ import java.time.LocalDate;
 @Component
 public class DataGenerator implements CommandLineRunner {
 
-
+private final TaskService taskService;
     private final RoleService roleService;
     private final UserService userService;
 
     private final ProjectService projectService;
 
-    public DataGenerator(RoleService roleService, UserService userService, ProjectService projectService) {
+    public DataGenerator(TaskService taskService, RoleService roleService, UserService userService, ProjectService projectService) {
+        this.taskService = taskService;
         this.roleService = roleService;
         this.userService = userService;
         this.projectService = projectService;
@@ -74,6 +77,20 @@ public class DataGenerator implements CommandLineRunner {
         projectService.save(project1);
         projectService.save(project2);
         projectService.save(project3);
+
+
+
+        TaskDTO task1 = new TaskDTO(1L,project1, user8, "Controller", "Request Mapping", LocalDate.now().minusDays(4),Status.IN_PROGRESS );
+        TaskDTO task2 = new TaskDTO(2L,project3, user3, "Configuration", "Database Connection",  LocalDate.now().minusDays(12),Status.COMPLETE);
+        TaskDTO task3 = new TaskDTO(3L,project3, user6, "Mapping", "One-To-Many",LocalDate.now().minusDays(8), Status.COMPLETE);
+        TaskDTO task4 = new TaskDTO(4L,project2, user7, "Dependency Injection", "Autowired",LocalDate.now().minusDays(20) ,Status.IN_PROGRESS);
+
+
+        taskService.save(task1);
+        taskService.save(task2);
+        taskService.save(task3);
+        taskService.save(task4);
+
 
     }
 
