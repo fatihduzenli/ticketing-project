@@ -1,21 +1,29 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.ProjectDTO;
+import com.cydeo.dto.TaskDTO;
+import com.cydeo.dto.UserDTO;
 import com.cydeo.enums.Status;
-import com.cydeo.service.CrudService;
 import com.cydeo.service.ProjectService;
-import com.cydeo.service.UserService;
+import com.cydeo.service.TaskService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProjectServiceImpl extends AbstractMapService<ProjectDTO, String> implements ProjectService {
 
+private final TaskService taskService;
+
+    public ProjectServiceImpl(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @Override
     public ProjectDTO save(ProjectDTO project) {
 
-        if (project.getStatus()==null){
+        if (project.getStatus() == null) {
             project.setStatus(Status.OPEN);
         }
         return super.save(project.getProjectCode(), project);
@@ -33,7 +41,7 @@ public class ProjectServiceImpl extends AbstractMapService<ProjectDTO, String> i
 
     @Override
     public void update(ProjectDTO object) {
-        if (object.getStatus()==null){
+        if (object.getStatus() == null) {
             object.setStatus(findById(object.getProjectCode()).getStatus());
         }
         super.update(object.getProjectCode(), object);
@@ -47,5 +55,30 @@ public class ProjectServiceImpl extends AbstractMapService<ProjectDTO, String> i
     @Override
     public void complete(ProjectDTO projectCode) {
         projectCode.setStatus(Status.COMPLETE);
+    }
+
+    @Override
+    public List<ProjectDTO> getCountedListOfProjectDTO(UserDTO manager) {
+
+        List<ProjectDTO> projectList =
+                findAll().stream()
+                        .filter(project -> project.getAssignedManager().equals(manager))
+                        .map(project -> {
+
+                            List<TaskDTO>tasklist= taskService.findTaskByManager(manager);
+                            int completeTaskCount = (int) tasklist.stream().filter(t->t.getProjectDTO().equals(project) && t.getStatus()==Status.COMPLETE).count();
+                            int unfinishedTaskCounts = (int) tasklist.stream().filter(t->t.getProjectDTO().equals(project)&&t.getStatus()!=Status.COMPLETE).count();
+
+                            project.setCompleteTaskCounts(completeTaskCount);
+                            project.setUnfinishedTaskCounts(unfinishedTaskCounts);
+
+                            return project;
+
+                        })
+
+                        .collect(Collectors.toList());
+
+        return projectList;
+
     }
 }
