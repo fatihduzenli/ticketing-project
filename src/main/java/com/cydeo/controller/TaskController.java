@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/task")
 public class TaskController {
@@ -79,15 +81,15 @@ public class TaskController {
     @PostMapping("/update/{id}")
     public String updateTask(@ModelAttribute("task") TaskDTO task, BindingResult bindingResult, Model model) {
 
-        //      if (bindingResult.hasErrors()) {
+             if (bindingResult.hasErrors()) {
 
-        //          model.addAttribute("projects", projectService.findAll());
-        //          model.addAttribute("employees", userService.findEmployee());
-        //          model.addAttribute("tasks", taskService.findAll());
+                  model.addAttribute("projects", projectService.findAll());
+                  model.addAttribute("employees", userService.findEmployee());
+                 model.addAttribute("tasks", taskService.findAll());
 
-        //          return "/task/update";
+                 return "/task/update";
 
-        //      }
+              }
 
         taskService.update(task);
 
@@ -121,10 +123,21 @@ public class TaskController {
     }
 
     @PostMapping("/employee/update/{id}")
-    public String updateEmployeeTask(TaskDTO task) {
+    public String employeeUpdateTask(@Valid @ModelAttribute("task") TaskDTO task, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+
+            model.addAttribute("statuses", Status.values());
+            model.addAttribute("tasks", taskService.findAllTaskByStatusIsNot(Status.COMPLETE));
+
+            return "/task/status-update";
+
+        }
+
         taskService.updateStatus(task);
 
         return "redirect:/task/employee/pending-tasks";
+
     }
 
 }

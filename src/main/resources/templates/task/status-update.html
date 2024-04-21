@@ -36,7 +36,7 @@
                                             <div class="col-sm-6 col-md-6 col-xs-12">
                                                 <div class="form-group">
                                                     <label>Project</label>
-                                                    <select th:field="*{projectDTO}" name="project" class="custom-select" disabled>
+                                                    <select th:field="*{projectDTO}" name="project" class="custom-select" readonly>
                                                         <option  th:value="${task.projectDTO.projectCode}"
                                                         th:text="${task.projectDTO.projectCode+' '+task.projectDTO.projectName}"></option>
                                                     </select>
@@ -47,7 +47,7 @@
                                             <div class="col-sm-6 col-md-6 col-xs-12">
                                                 <div class="form-group">
                                                     <label>Assigned Employee</label>
-                                                    <select th:field="*{employee}" name="assignedemployee" class="custom-select" disabled>
+                                                    <select th:field="*{employee}" name="assignedemployee" class="custom-select" readonly>
                                                         <option  th:value="${task.employee.userName}"
                                                                 th:text="${task.employee.firstName +' '+ task.employee.lastName}"></option>
                                                     </select>
@@ -61,7 +61,7 @@
                                                         <div class="form-group">
                                                             <label for="tasksubject">Task Subject</label>
                                                             <input th:field="*{taskSubject}" th:text="${task.taskSubject}" id="tasksubject" type="text" class="form-control"
-                                                                   aria-describedby="inputGroupPrepend" disabled/>
+                                                                   aria-describedby="inputGroupPrepend" readonly/>
                                                         </div>
                                                     </div>
                                                 </div>
