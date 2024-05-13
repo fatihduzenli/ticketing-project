@@ -16,7 +16,7 @@ private final UserService userService;
 
     @Override
     public UserDTO convert(String source) {
-        return userService.findById(source);
+        return userService.findByUserName(source);
         // logic is: we provide the string id, and the method will go check dataBase and bring the object that matches with that string ID.
 
     }

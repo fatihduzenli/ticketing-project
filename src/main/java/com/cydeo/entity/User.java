@@ -1,12 +1,15 @@
 package com.cydeo.entity;
 
 import com.cydeo.enums.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+import javax.persistence.*;
+
+@Getter
+@Setter
 @NoArgsConstructor
+@Entity
+@Table(name = "users")
 public class User extends BaseEntity{
 
     private String firstname;
@@ -15,17 +18,10 @@ public class User extends BaseEntity{
     private String password;
     private boolean enabled;
     private String phone;
+    @ManyToOne
     private Role role;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    public User(String firstname, String lastName, String userName, String password, boolean enabled, String phone, Role role, Gender gender) {
-        this.firstname = firstname;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.password = password;
-        this.enabled = enabled;
-        this.phone = phone;
-        this.role = role;
-        this.gender = gender;
-    }
+
 }
