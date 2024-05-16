@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findByUserName(String username) {
-           userRepository.findByUserName(username);
 
         return userMapper.convertToUserDto(userRepository.findByUserName(username));
     }
@@ -41,6 +40,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteByUserName(String username) {
+        User user2=userRepository.findByUserName(username);
+      //  userRepository.deleteById(user2.getId()); we can delete with getting the id of user
+        userRepository.deleteByUserName(username); // or with a method we created
 
+    }
+
+    @Override
+    public UserDTO update(UserDTO user) {
+    User user1=  userRepository.findByUserName(user.getUserName()); // this is not for update purpose.We are getting this from DB, so we can set the id
+    User convertedUser= userMapper.convertToUserEntity(user); // Whatever the changes happened on the view side, we are saving to DB layer by converting it
+    convertedUser.setId(user1.getId());// here we are setting id to converted object
+        userRepository.save(convertedUser);
+        return findByUserName(user.getUserName());
     }
 }

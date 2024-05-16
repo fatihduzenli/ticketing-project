@@ -17,76 +17,76 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 public class UserController {
 
-  private final RoleService roleService;
-  private final UserService userService;
+    private final RoleService roleService;
+    private final UserService userService;
 
-  public UserController(RoleService roleService, UserService userService) {
-      this.roleService = roleService;
-      this.userService = userService;
-  }
+    public UserController(RoleService roleService, UserService userService) {
+        this.roleService = roleService;
+        this.userService = userService;
+    }
 
-  @GetMapping("/create")
-  public String createUser(Model model) {
+    @GetMapping("/create")
+    public String createUser(Model model) {
 
-      model.addAttribute("user", new UserDTO());
+        model.addAttribute("user", new UserDTO());
 
-      model.addAttribute("roles", roleService.listAllRoles());
+        model.addAttribute("roles", roleService.listAllRoles());
 
-      model.addAttribute("users", userService.listAllUsers());
+        model.addAttribute("users", userService.listAllUsers());
 
-      return "/user/create";
-  }
-
-
-  @PostMapping("/create")
-  public String insertUser( @ModelAttribute("user") UserDTO user, BindingResult bindingResult,Model model) {
-
-       if (bindingResult.hasErrors()) {
-           model.addAttribute("roles", roleService.listAllRoles());
-
-           model.addAttribute("users", userService.listAllUsers());
-
-           return "/user/create";
-       }
-
-          userService.save(user);
-
-          return "redirect:/user/create";
+        return "/user/create";
+    }
 
 
-  }
+    @PostMapping("/create")
+    public String insertUser(@ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
 
-//  @GetMapping("/update/{username}")
-//  public String editUser(@PathVariable("username") String username, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", roleService.listAllRoles());
 
-//      model.addAttribute("user", userService.findById(username));
-//      model.addAttribute("roles", roleService.findAll());
-//      model.addAttribute("users", userService.findAll());
+            model.addAttribute("users", userService.listAllUsers());
 
-//      return "/user/update";
-//  }
+            return "/user/create";
+        }
 
-//  @PostMapping("/update")
-//  public String updateUser(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model ) {
+        userService.save(user);
 
-//      if (bindingResult.hasErrors()){
-//          model.addAttribute("roles", roleService.findAll());
-//          model.addAttribute("users", userService.findAll());
-
-//          return "/user/update";
-//      }
+        return "redirect:/user/create";
 
 
+    }
 
-//      userService.update(user);
+    @GetMapping("/update/{username}")
+    public String editUser(@PathVariable("username") String username, Model model) {
 
-//      return "redirect:/user/create";
-//  }
-//  @GetMapping("/delete/{username}")
-//  public String deleteUser(@PathVariable("username") String username){
-//      userService.deleteById(username);
+        model.addAttribute("user", userService.findByUserName(username));
+        model.addAttribute("roles", roleService.listAllRoles());
+        model.addAttribute("users", userService.listAllUsers());
 
-//      return "redirect:/user/create";
- }
+        return "/user/update";
+    }
+
+    @PostMapping("/update")
+    public String updateUser(@ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", roleService.listAllRoles());
+            model.addAttribute("users", userService.listAllUsers());
+
+            return "/user/update";
+        }
+
+        userService.update(user);
+
+        return "redirect:/user/create";
+    }
 
 
+    @GetMapping("/delete/{username}")
+    public String deleteUser(@PathVariable("username") String username) {
+        userService.deleteByUserName(username);
+
+        return "redirect:/user/create";
+    }
+
+}
