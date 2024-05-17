@@ -54,4 +54,16 @@ public class UserServiceImpl implements UserService {
         userRepository.save(convertedUser);
         return findByUserName(user.getUserName());
     }
+
+    //with the method below, we are going to delete user from the user side, but we will keep the data in db
+    // Steps: go to db and get the user by calling it with username => change the isDeleted field to true
+    // => save the object in db
+    @Override
+    public void delete(String username) {
+        User user= userRepository.findByUserName(username);
+        user.setIsDeleted(true);
+        userRepository.save(user);
+
+
+    }
 }
