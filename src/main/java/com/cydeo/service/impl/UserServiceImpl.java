@@ -63,7 +63,12 @@ public class UserServiceImpl implements UserService {
         User user= userRepository.findByUserName(username);
         user.setIsDeleted(true);
         userRepository.save(user);
-
-
     }
+
+    @Override
+    public List<UserDTO> findManagers(String role) {
+      return   userRepository.findByRoleDescription("Manager").stream().map(userMapper::convertToUserDto).collect(Collectors.toList());
+    }
+
+
 }

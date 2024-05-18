@@ -12,9 +12,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users")
 @Where(clause = "is_deleted=false")
+//Where annotation concatenates this clause to all the queries inside the user repository
 public class User extends BaseEntity{
 
-    private String firstname;
+    private String firstName;
     private String lastName;
     private String userName;
     private String password;

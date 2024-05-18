@@ -4,6 +4,8 @@ import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.enums.Status;
 
+import com.cydeo.service.ProjectService;
+import com.cydeo.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,26 +15,26 @@ import java.util.List;
 @Controller
 @RequestMapping("/project")
 public class ProjectController {
-//
-//    private final UserService userService;
-//    private final ProjectService projectService;
-//
-//    public ProjectController(UserService userService, ProjectService projectService) {
-//        this.userService = userService;
-//        this.projectService = projectService;
-//    }
-//
-//
-//    @GetMapping("/create")
-//    public String productCreate(Model model) {
-//
-//        model.addAttribute("project", new ProjectDTO());
-//        model.addAttribute("managers", userService.findManagers());
-//        model.addAttribute("projects", projectService.findAll());
-//
-//        return "project/create";
-//    }
-//
+
+    private final UserService userService;
+    private final ProjectService projectService;
+
+    public ProjectController(UserService userService, ProjectService projectService) {
+        this.userService = userService;
+        this.projectService = projectService;
+    }
+
+
+    @GetMapping("/create")
+    public String productCreate(Model model) {
+
+        model.addAttribute("project", new ProjectDTO());
+        model.addAttribute("managers", userService.findManagers("Manager"));
+        model.addAttribute("projects", projectService.listAllProjects());
+
+        return "project/create";
+    }
+
 //    @PostMapping("/create")
 //    public String saveProject(@ModelAttribute("project") ProjectDTO projectDTO) {
 //
