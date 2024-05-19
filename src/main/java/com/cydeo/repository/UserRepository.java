@@ -14,6 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional  // if there is any issue while executing the method, it will roll back
     void deleteByUserName(String username);// we created another drived query to be able to delete by username
 
-    List<User>findByRoleDescription(String role);
+    List<User>findByRoleDescriptionIgnoreCase(String role);
 
 }
