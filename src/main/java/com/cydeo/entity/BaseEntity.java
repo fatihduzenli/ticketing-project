@@ -17,7 +17,7 @@ public class BaseEntity {
     private Long id;
 
     private Boolean isDeleted = false;
-    @Column(nullable = false,updatable = false) // this field cannot be null, when we update ignore this field
+    @Column(nullable = false,updatable = false) // this field can not be null, when we update ignore this field
     private LocalDateTime insertDateTime;
     @Column(nullable = false,updatable = false)
     private Long insertUserId;

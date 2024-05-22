@@ -2,6 +2,7 @@ package com.cydeo.service;
 
 import com.cydeo.dto.ProjectDTO;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ProjectService {
