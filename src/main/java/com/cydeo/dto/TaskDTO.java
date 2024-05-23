@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class TaskDTO {
    private Long id;
 @NotNull
-   private ProjectDTO projectDTO;
+   private ProjectDTO project;
 @NotNull
    private UserDTO employee;
 @NotBlank

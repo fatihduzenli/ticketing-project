@@ -36,8 +36,8 @@
                                             <div class="col-sm-6 col-md-6 col-xs-12">
                                                 <div class="form-group">
                                                     <label>Project</label>
-                                                    <select th:field="*{projectDTO}" name="project" class="custom-select" readonly>
-                                                        <option  th:value="${task.projectDTO.projectCode}"
+                                                    <select th:field="*{project}" name="project" class="custom-select" readonly>
+                                                        <option  th:value="${task.project.projectCode}"
                                                         th:text="${task.projectDTO.projectCode+' '+task.projectDTO.projectName}"></option>
                                                     </select>
                                                 </div>

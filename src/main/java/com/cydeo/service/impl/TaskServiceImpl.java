@@ -45,7 +45,9 @@ public class TaskServiceImpl implements TaskService {
     public void update(TaskDTO dto) {
         Task task = taskRepository.getById(dto.getId());
         Task convertedTask = taskMapper.convertToEntity(dto);
-        convertedTask.setId(task.getId());
+      //  convertedTask.setId(task.getId());
+        convertedTask.setAssignedDate(task.getAssignedDate());
+        convertedTask.setTaskStatus(task.getTaskStatus());
         taskRepository.save(convertedTask);
 
     }

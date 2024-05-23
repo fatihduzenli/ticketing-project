@@ -34,5 +34,5 @@ public class Task extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "assigned_employee_id")
-    private User assignedEmployee;
+    private User employee;
 }
