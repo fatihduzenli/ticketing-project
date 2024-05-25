@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Table(name = "projects")
 @Where(clause = "is_deleted=false")
 public class Project extends BaseEntity {
-    @Column(unique = true)
+    @Column(unique = true)  // it makes the field unique
     private String projectCode;
     private String projectName;
 

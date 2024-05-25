@@ -1,8 +1,11 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.TaskDTO;
+import com.cydeo.entity.Project;
 import com.cydeo.entity.Task;
 import com.cydeo.enums.Status;
+import com.cydeo.mapper.ProjectMapper;
 import com.cydeo.mapper.TaskMapper;
 import com.cydeo.repository.TaskRepository;
 import com.cydeo.service.TaskService;
@@ -17,9 +20,12 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
 
-    public TaskServiceImpl(TaskMapper taskMapper, TaskRepository taskRepository) {
+    private final ProjectMapper projectMapper;
+
+    public TaskServiceImpl(TaskMapper taskMapper, TaskRepository taskRepository, ProjectMapper projectMapper) {
         this.taskMapper = taskMapper;
         this.taskRepository = taskRepository;
+        this.projectMapper = projectMapper;
     }
 
     @Override
@@ -57,5 +63,26 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.getById(id);
         task.setIsDeleted(true);
         taskRepository.save(task);
+    }
+
+    @Override
+    public int totalNonCompletedTask(String projectCode) {
+        return taskRepository.totalNonCompletedTask(projectCode);
+    }
+
+    @Override
+    public int totalCompletedTask(String projectCode) {
+        return taskRepository.totalCompletedTask(projectCode);
+    }
+
+    @Override
+    public void deleteByProject(ProjectDTO projectDTO) {
+        // Here we are going the deleting all the task that was belonged to the deleted project
+        Project project=projectMapper.convertToEntity(projectDTO);
+        //Here we got a list of the task that belong to project that we deleted
+        List<Task> task= taskRepository.findAllByProject(project);
+        // Here we use the delete method that we use above which sets setIsDeleted(true)
+        // We set one by one all the task's setIsDeleted field true by delete() method
+        task.forEach(task1 -> delete(task1.getId()));
     }
 }
