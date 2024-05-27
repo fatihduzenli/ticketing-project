@@ -30,7 +30,8 @@ public class ProjectController {
 
         model.addAttribute("project", new ProjectDTO());
         model.addAttribute("managers", userService.listByRole("Manager"));
-        model.addAttribute("projects", projectService.listAllProjects());
+        // listAllProjectDetails method will allow us to see project lists that belong to the assigned manager
+        model.addAttribute("projects", projectService.listAllProjectDetails());
 
         return "project/create";
     }
@@ -40,7 +41,7 @@ public class ProjectController {
 
 
         model.addAttribute("managers", userService.listByRole("manager"));
-        model.addAttribute("projects", projectService.listAllProjects());
+        model.addAttribute("projects", projectService.listAllProjectDetails());
 
 
         projectDTO.setStatus(Status.OPEN);
@@ -69,7 +70,8 @@ public class ProjectController {
 
         model.addAttribute("project", projectService.getByProjectCode(projectCode));
         model.addAttribute("managers", userService.listByRole("manager"));
-        model.addAttribute("projects", projectService.listAllProjects());
+        // listAllProjectDetails method will allow us to see project lists that belong to the assigned manager
+        model.addAttribute("projects", projectService.listAllProjectDetails());
 
 
         return "project/update";
@@ -83,14 +85,14 @@ public class ProjectController {
 
         return "redirect:/project/create";
     }
-//
-//    @GetMapping("/manager/complete/{projectCode}")
-//    public String managerCompleteProject(@PathVariable("projectCode") String projectCode) {
-//
-//        projectService.complete(projectService.getByProjectCode(projectCode));
-//
-//        return "redirect:/project/manager/project-status";
-//    }
+
+    @GetMapping("/manager/complete/{projectCode}")
+    public String managerCompleteProject(@PathVariable("projectCode") String projectCode) {
+
+        projectService.complete(projectCode);
+
+        return "redirect:/project/manager/project-status";
+    }
 
     @GetMapping("/manager/project-status")
     public String getProjectByManager(Model model) {

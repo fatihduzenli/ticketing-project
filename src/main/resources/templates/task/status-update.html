@@ -38,7 +38,7 @@
                                                     <label>Project</label>
                                                     <select th:field="*{project}" name="project" class="custom-select" readonly>
                                                         <option  th:value="${task.project.projectCode}"
-                                                        th:text="${task.projectDTO.projectCode+' '+task.projectDTO.projectName}"></option>
+                                                        th:text="${task.project.projectCode+' '+task.project.projectName}"></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -130,7 +130,7 @@
                                             </thead>
                                             <tbody>
                                             <tr th:each="task : ${task}">
-                                                <td th:text="${task.projectDTO.projectCode+' '+ task.projectDTO.projectName}"></td>
+                                                <td th:text="${task.project.projectCode+' '+ task.project.projectName}"></td>
                                                 <td th:text="${task.taskSubject}"></td>
                                                 <td th:text="${task.employee.firstName+' '+task.employee.lastName}"></td>
                                                 <td th:text="${#temporals.format(task.assignedDate, 'MM/dd/yyyy')}"></td>

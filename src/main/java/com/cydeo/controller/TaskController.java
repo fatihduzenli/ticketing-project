@@ -98,47 +98,46 @@ public class TaskController {
 
     }
 
-//    @GetMapping("/employee/pending-tasks")
-//    public String employeePendingTasks(Model model) {
-//
-//        model.addAttribute("tasks", taskService.findAllTaskByStatusIsNot(Status.COMPLETE));
-//        return "/task/pending-tasks";
-//    }
-//
-//    @GetMapping("/employee/archive")
-//    public String employeeArchive(Model model) {
-//        model.addAttribute("archive", taskService.findAllTaskByStatusIsCompleted(Status.COMPLETE));
-//
-//        return "task/archive";
-//    }
-//
-//    @GetMapping("/employee/edit/{id}")
-//    public String editEmployeeTask(@PathVariable Long id, Model model) {
-//
-//        model.addAttribute("task", taskService.findById(id));
-//        model.addAttribute("statuses", Status.values());
-//    //    model.addAttribute("projects", projectService.findAll());
-//    //    model.addAttribute("employees", userService.findEmployee());
-//        model.addAttribute("tasks", taskService.findAllTaskByStatusIsNot(Status.COMPLETE));
-//        return "/task/status-update";
-//    }
-//
-//    @PostMapping("/employee/update/{id}")
-//    public String employeeUpdateTask(@Valid @ModelAttribute("task") TaskDTO task, BindingResult bindingResult, Model model) {
-//
-//        if (bindingResult.hasErrors()) {
-//
-//            model.addAttribute("statuses", Status.values());
-//            model.addAttribute("tasks", taskService.findAllTaskByStatusIsNot(Status.COMPLETE));
-//
-//            return "/task/status-update";
-//
-//        }
-//
-//        taskService.updateStatus(task);
-//
-//        return "redirect:/task/employee/pending-tasks";
-//
-//    }
-//
+    @GetMapping("/employee/pending-tasks")
+    public String employeePendingTasks(Model model) {
+
+        model.addAttribute("tasks", taskService.listAllTaskByStatusIsNot(Status.COMPLETE));
+        return "/task/pending-tasks";
+    }
+
+    @GetMapping("/employee/archive")
+    public String employeeArchive(Model model) {
+        model.addAttribute("archive", taskService.listAllTaskByStatus(Status.COMPLETE));
+
+        return "task/archive";
+    }
+
+    @GetMapping("/employee/edit/{id}")
+    public String editEmployeeTask(@PathVariable Long id, Model model) {
+
+        model.addAttribute("task", taskService.getByTaskId(id));
+        model.addAttribute("statuses", Status.values());
+
+        model.addAttribute("tasks", taskService.listAllTaskByStatusIsNot(Status.COMPLETE));
+        return "/task/status-update";
+    }
+
+    @PostMapping("/employee/update/{id}")
+    public String employeeUpdateTask( @ModelAttribute("task") TaskDTO task, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+
+            model.addAttribute("statuses", Status.values());
+            model.addAttribute("tasks", taskService.listAllTaskByStatusIsNot(Status.COMPLETE));
+
+            return "/task/status-update";
+
+        }
+
+        taskService.update(task);
+
+        return "redirect:/task/employee/pending-tasks";
+
+    }
+
 }

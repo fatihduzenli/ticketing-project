@@ -23,6 +23,8 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserService userService;
     private final UserMapper userMapper;
     private final TaskService taskService;
+
+
     public ProjectServiceImpl(ProjectMapper projectMapper, ProjectRepository projectRepository, UserService userService, UserMapper userMapper, TaskService taskService) {
         this.projectMapper = projectMapper;
         this.projectRepository = projectRepository;
@@ -78,9 +80,11 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findByProjectCode(code);
         project.setProjectStatus(Status.COMPLETE);
         projectRepository.save(project);
+        taskService.completeByProject(projectMapper.convertToDto(project));
     }
 
-    @Override
+
+ // listAllProjectDetails method will allow us to see project lists that belong to the assigned manager@Override
     public List<ProjectDTO> listAllProjectDetails() {
         // business logic: we get all the project that assigned to certain manager
         // Since we don't have the security we get the manager hard coded
@@ -103,5 +107,11 @@ public class ProjectServiceImpl implements ProjectService {
             return obj;
         }
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProjectDTO> listAllNonCompletedByAssignedManager(UserDTO assignedUser) {
+        List<Project> projects=projectRepository.findAllByAssignedManagerAndProjectStatusIsNot(userMapper.convertToUserEntity(assignedUser),Status.COMPLETE);
+        return projects.stream().map(projectMapper::convertToDto).collect(Collectors.toList());
     }
 }

@@ -2,13 +2,16 @@ package com.cydeo.service.impl;
 
 import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.TaskDTO;
+import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.Project;
 import com.cydeo.entity.Task;
 import com.cydeo.enums.Status;
 import com.cydeo.mapper.ProjectMapper;
 import com.cydeo.mapper.TaskMapper;
+import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.TaskRepository;
 import com.cydeo.service.TaskService;
+import com.cydeo.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,11 +24,15 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
 
     private final ProjectMapper projectMapper;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
-    public TaskServiceImpl(TaskMapper taskMapper, TaskRepository taskRepository, ProjectMapper projectMapper) {
+    public TaskServiceImpl(TaskMapper taskMapper, TaskRepository taskRepository, ProjectMapper projectMapper, UserServiceImpl userService, UserMapper userMapper) {
         this.taskMapper = taskMapper;
         this.taskRepository = taskRepository;
         this.projectMapper = projectMapper;
+        this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -53,7 +60,9 @@ public class TaskServiceImpl implements TaskService {
         Task convertedTask = taskMapper.convertToEntity(dto);
       //  convertedTask.setId(task.getId());
         convertedTask.setAssignedDate(task.getAssignedDate());
-        convertedTask.setTaskStatus(task.getTaskStatus());
+        // dto.getStatus()==null means its coming from form that manager uses
+        // if not null it means it's coming from employee page or its coming from complete method we use in the project service
+        convertedTask.setStatus(dto.getStatus()==null ? task.getStatus() : dto.getStatus());
         taskRepository.save(convertedTask);
 
     }
@@ -84,5 +93,37 @@ public class TaskServiceImpl implements TaskService {
         // Here we use the delete method that we use above which sets setIsDeleted(true)
         // We set one by one all the task's setIsDeleted field true by delete() method
         task.forEach(task1 -> delete(task1.getId()));
+    }
+
+    @Override
+    public void completeByProject(ProjectDTO projectDTO) { // we retrieve the tasks by the project
+        Project project=projectMapper.convertToEntity(projectDTO);
+        List<Task> task= taskRepository.findAllByProject(project);
+        task.stream().map(taskMapper::convertToDto).forEach(taskDTO -> {
+            taskDTO.setStatus(Status.COMPLETE);
+            update(taskDTO);
+        });
+    }
+
+    @Override
+    public List<TaskDTO> listAllTaskByStatusIsNot(Status status) {
+        // we get the logged-in user by hard code until we learn security
+        UserDTO loggedInUser= userService.findByUserName("john@employee.com");
+        // Here we get all the tasks that belong to logged-in user and we pass the status
+        List<Task> tasks =  taskRepository.findAllByStatusIsNotAndEmployee(status,userMapper.convertToUserEntity(loggedInUser) );
+        return tasks.stream().map(taskMapper::convertToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskDTO> listAllTaskByStatus(Status status) {
+        UserDTO loggedInUser= userService.findByUserName("john@employee.com");
+        List<Task> tasks =  taskRepository.findAllByStatusAndEmployee(status,userMapper.convertToUserEntity(loggedInUser) );
+        return tasks.stream().map(taskMapper::convertToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskDTO> listAllNonCompletedByAssignedEmployee(UserDTO user) {
+        List<Task> tasks= taskRepository.findAllByStatusIsNotAndEmployee(Status.COMPLETE, userMapper.convertToUserEntity(user));
+        return tasks.stream().map(taskMapper::convertToDto).collect(Collectors.toList());
     }
 }

@@ -11,12 +11,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-@Where(clause = "is_deleted=false")
+//@Where(clause = "is_deleted=false")
 //Where annotation concatenates this clause to all the queries inside the user repository
 public class User extends BaseEntity{
 
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String userName;
     private String password;
     private boolean enabled;
