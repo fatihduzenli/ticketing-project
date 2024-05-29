@@ -92,10 +92,10 @@ public class UserServiceImpl implements UserService {
     private boolean checkIfUserCanBeDeleted(User user) {
 
         switch (user.getRole().getDescription()) {
-            case "Manager":
+            case "Manager": // Here we check if the manager has a non-completed project, we cannot delete the manager
                 List<ProjectDTO> projectDTOList = projectService.listAllNonCompletedByAssignedManager(userMapper.convertToUserDto(user));
                 return projectDTOList.size() == 0;
-            case "Employee":
+            case "Employee": // Here we check if the employee has a non-completed task, we cannot delete the employee
                 List<TaskDTO> taskDTOList = taskService.listAllNonCompletedByAssignedEmployee(userMapper.convertToUserDto(user));
                 return taskDTOList.size()==0;
             default:

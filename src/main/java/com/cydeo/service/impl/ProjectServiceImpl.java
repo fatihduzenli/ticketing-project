@@ -45,6 +45,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void save(ProjectDTO dto) {
+        dto.setStatus(Status.OPEN);
         projectRepository.save(projectMapper.convertToEntity(dto));
     }
 
@@ -64,13 +65,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void delete(String code) {
         Project project = projectRepository.findByProjectCode(code);
-        project.setIsDeleted(true);
+        project.setIsDeleted(true); // Here we do soft deletion
 
         // Here we manipulate project code to something else,
         // so we can use the same project code for our future projects
         project.setProjectCode(project.getProjectCode()+"-"+project.getId());
         projectRepository.save(project);
-
+        // Here we also delete all the task that belongs to the certain project
+        // ones we delete the project there is no point to keep the tasks that belong to deleted project
         taskService.deleteByProject(projectMapper.convertToDto(project));
 
     }

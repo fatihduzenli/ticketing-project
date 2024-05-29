@@ -40,7 +40,8 @@ public class UserController {
 
     @PostMapping("/create")
     public String insertUser(@ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
-
+// this method basically checks if there is any validation error and if there is a validation error,
+        // code will not go further to save user, and it will return to user/create page
         if (bindingResult.hasErrors()) {
             model.addAttribute("roles", roleService.listAllRoles());
 

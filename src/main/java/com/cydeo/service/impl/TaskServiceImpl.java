@@ -61,8 +61,8 @@ public class TaskServiceImpl implements TaskService {
       //  convertedTask.setId(task.getId());
         convertedTask.setAssignedDate(task.getAssignedDate());
         // dto.getStatus()==null means its coming from form that manager uses
-        // if not null it means it's coming from employee page or its coming from complete method we use in the project service
-        convertedTask.setStatus(dto.getStatus()==null ? task.getStatus() : dto.getStatus());
+        // if not null it means it's coming from employee page that we do update to change the task status if the task is in progress or completed
+        convertedTask.setStatus(dto.getStatus()==null ? task.getStatus() : dto.getStatus()); // explain in week 29 live review 2:15:00
         taskRepository.save(convertedTask);
 
     }
@@ -98,7 +98,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void completeByProject(ProjectDTO projectDTO) { // we retrieve the tasks by the project
         Project project=projectMapper.convertToEntity(projectDTO);
+        // Here we get all the tasks that belong to a certain project
         List<Task> task= taskRepository.findAllByProject(project);
+        // And we convert each task's status to be completed
         task.stream().map(taskMapper::convertToDto).forEach(taskDTO -> {
             taskDTO.setStatus(Status.COMPLETE);
             update(taskDTO);
