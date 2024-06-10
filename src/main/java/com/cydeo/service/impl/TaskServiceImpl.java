@@ -12,6 +12,8 @@ import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.TaskRepository;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,7 +29,7 @@ public class TaskServiceImpl implements TaskService {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    public TaskServiceImpl(TaskMapper taskMapper, TaskRepository taskRepository, ProjectMapper projectMapper, UserServiceImpl userService, UserMapper userMapper) {
+    public TaskServiceImpl(TaskMapper taskMapper, TaskRepository taskRepository, ProjectMapper projectMapper, @Lazy UserServiceImpl userService, UserMapper userMapper) {
         this.taskMapper = taskMapper;
         this.taskRepository = taskRepository;
         this.projectMapper = projectMapper;
@@ -110,7 +112,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDTO> listAllTaskByStatusIsNot(Status status) {
         // we get the logged-in user by hard code until we learn security
-        UserDTO loggedInUser= userService.findByUserName("john@employee.com");
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDTO loggedInUser= userService.findByUserName(username);
         // Here we get all the tasks that belong to logged-in user and we pass the status
         List<Task> tasks =  taskRepository.findAllByStatusIsNotAndEmployee(status,userMapper.convertToUserEntity(loggedInUser) );
         return tasks.stream().map(taskMapper::convertToDto).collect(Collectors.toList());
@@ -118,7 +121,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> listAllTaskByStatus(Status status) {
-        UserDTO loggedInUser= userService.findByUserName("john@employee.com");
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDTO loggedInUser= userService.findByUserName(username);
         List<Task> tasks =  taskRepository.findAllByStatusAndEmployee(status,userMapper.convertToUserEntity(loggedInUser) );
         return tasks.stream().map(taskMapper::convertToDto).collect(Collectors.toList());
     }

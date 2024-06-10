@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@EntityListeners((BaseEntity.class))
 
 public class BaseEntity {
     @Id

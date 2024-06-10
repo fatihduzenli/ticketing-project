@@ -11,6 +11,9 @@ import com.cydeo.repository.ProjectRepository;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +28,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final TaskService taskService;
 
 
-    public ProjectServiceImpl(ProjectMapper projectMapper, ProjectRepository projectRepository, UserService userService, UserMapper userMapper, TaskService taskService) {
+    public ProjectServiceImpl(ProjectMapper projectMapper, ProjectRepository projectRepository, @Lazy UserService userService, UserMapper userMapper, TaskService taskService) {
         this.projectMapper = projectMapper;
         this.projectRepository = projectRepository;
         this.userService = userService;
@@ -88,10 +91,15 @@ public class ProjectServiceImpl implements ProjectService {
 
  // listAllProjectDetails method will allow us to see project lists that belong to the assigned manager@Override
     public List<ProjectDTO> listAllProjectDetails() {
+// This is how spring provides us the username who logged in the system
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+
+
+
         // business logic: we get all the project that assigned to certain manager
         // Since we don't have the security we get the manager hard coded
 
-        UserDTO currentUserDTO = userService.findByUserName("harold@manager.com");
+        UserDTO currentUserDTO = userService.findByUserName(username);
         // Here we captured the manager who logged in with hard code
 
         User user = userMapper.convertToUserEntity(currentUserDTO);
