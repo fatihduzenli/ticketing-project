@@ -16,7 +16,7 @@ public class BaseEntityListener extends AuditingEntityListener {
 // in the base entity, Whenever we update or create a project, we save this information to DB
     // Such as who did that and what time the update happened.By using BaseEntityListener we are assigning those values
     // Security will give us all the information
-    @PrePersist
+    @PrePersist //Marks this method to be called before an entity is persisted (inserted into the database).
     private void onPrePersist(BaseEntity baseEntity){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -31,9 +31,9 @@ public class BaseEntityListener extends AuditingEntityListener {
         }
     }
 
-    @PreUpdate
+    @PreUpdate // Marks this method to be called before an entity is updated.
     private void onPreUpdate(BaseEntity baseEntity){
-
+//	•	Retrieves the current Authentication object from the security context, representing the user’s authentication state.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         baseEntity.setLastUpdateDateTime(LocalDateTime.now());

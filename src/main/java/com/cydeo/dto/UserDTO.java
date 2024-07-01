@@ -33,7 +33,7 @@ private Long id;
     private String userName;
     @NotBlank
     @Pattern(regexp = "(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,}")
-    private String passWord;
+    private String password;
     private boolean enabled;
     @NotBlank
     @Pattern(regexp = "^\\d{10}$")

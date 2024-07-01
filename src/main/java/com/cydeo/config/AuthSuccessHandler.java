@@ -13,10 +13,16 @@ import java.io.IOException;
 import java.util.Set;
 @Configuration
 public class AuthSuccessHandler implements AuthenticationSuccessHandler {
+    //This declares the AuthSuccessHandler class, which will handle actions upon successful authentication.
+    //AuthenticationSuccessHandler interface: which defines a method to be called when a user has been successfully authenticated.
 
     @Override
+    //This method will be executed when the user authentication is successful.
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+      //HttpServletRequest:This parameter provides request information for HTTP servlets, such as request parameters, headers, and attributes.
+        //HttpServletResponse response: This parameter allows the servlet to respond to the client with HTTP response data, including headers and content.
+        // Authentication: This parameter holds the authentication details of the user, such as authorities and credentials.
+        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities()); // This converts the list of authorities (roles) from the Authentication object into a Set of String for easier manipulation and checks.
 
         if(roles.contains("Admin")){
             response.sendRedirect("/user/create");
